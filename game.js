@@ -1,4 +1,25 @@
-﻿var config = {
+﻿// ═════════════════════════════════════════════
+//  GAME SCENE (Main Gameplay)
+// ═════════════════════════════════════════════
+class Game extends Phaser.Scene {
+  constructor() {
+    super({ key: "Game" });
+  }
+
+  preload() {
+    preload.call(this);
+  }
+
+  create() {
+    create.call(this);
+  }
+
+  update() {
+    update.call(this);
+  }
+}
+
+var config = {
   type: Phaser.AUTO,
   width: 800,
   height: 400,
@@ -10,11 +31,14 @@
       debug: false, // set to true to see physics boxes
     },
   },
-  scene: {
-    preload: preload,
-    create: create,
-    update: update,
-  },
+  scene: [
+    MainMenu,
+    LevelSelect,
+    CharacterSelect,
+    Settings,
+    Credits,
+    Game,
+  ],
 };
 
 var game = new Phaser.Game(config);
@@ -31,7 +55,10 @@ function preload() {
   this.load.image("apple", "assets/2d/Items/Fruits/Apple_idle.png");
 
   // Pickup sound effect
-  this.load.audio("pickup-sfx", "assets/audio/GameSFX/PickUp/Retro PickUp Coin 07.wav");
+  this.load.audio(
+    "pickup-sfx",
+    "assets/audio/GameSFX/PickUp/Retro PickUp Coin 07.wav",
+  );
 
   // Player assets — defined in player.js
   playerPreload(this);
@@ -74,7 +101,7 @@ function create() {
       var sprite = pickupGroup.create(
         obj.x + obj.width / 2,
         obj.y - obj.height / 2,
-        "apple"
+        "apple",
       );
       // Read health_points from object properties if present, otherwise default to 10
       var hp = 10;
@@ -92,48 +119,54 @@ function create() {
   var scene = this;
 
   // When the player overlaps an apple, flash it, remove it, and show popup text
-  this.physics.add.overlap(player, pickupGroup, function (playerSprite, pickup) {
-    var hp = pickup.healthPoints;
-    var worldX = pickup.x;
-    var worldY = pickup.y;
+  this.physics.add.overlap(
+    player,
+    pickupGroup,
+    function (playerSprite, pickup) {
+      var hp = pickup.healthPoints;
+      var worldX = pickup.x;
+      var worldY = pickup.y;
 
-    // Disable physics body so this callback can't fire again for the same apple
-    pickup.body.enable = false;
+      // Disable physics body so this callback can't fire again for the same apple
+      pickup.body.enable = false;
 
-    // Play the pickup sound
-    scene.sound.play("pickup-sfx");
+      // Play the pickup sound
+      scene.sound.play("pickup-sfx");
 
-    // Flash the apple: quickly blink alpha 3 times, then destroy it
-    scene.tweens.add({
-      targets: pickup,
-      alpha: 0,
-      duration: 80,       // each half-blink is 80ms
-      yoyo: true,         // bounce back to alpha 1
-      repeat: 2,          // 3 full blinks total
-      onComplete: function () {
-        pickup.destroy();
-      }
-    });
+      // Flash the apple: quickly blink alpha 3 times, then destroy it
+      scene.tweens.add({
+        targets: pickup,
+        alpha: 0,
+        duration: 80, // each half-blink is 80ms
+        yoyo: true, // bounce back to alpha 1
+        repeat: 2, // 3 full blinks total
+        onComplete: function () {
+          pickup.destroy();
+        },
+      });
 
-    // Show "+N Health!" text floating up from the apple's position, then fade out
-    var popupText = scene.add.text(worldX, worldY - 20, "+" + hp + " Health!", {
-      fontSize: "22px",
-      color: "#00ff44",
-      stroke: "#000000",
-      strokeThickness: 4
-    }).setOrigin(0.5, 1);
+      // Show "+N Health!" text floating up from the apple's position, then fade out
+      var popupText = scene.add
+        .text(worldX, worldY - 20, "+" + hp + " Health!", {
+          fontSize: "22px",
+          color: "#00ff44",
+          stroke: "#000000",
+          strokeThickness: 4,
+        })
+        .setOrigin(0.5, 1);
 
-    scene.tweens.add({
-      targets: popupText,
-      y: worldY - 80,     // floats upward
-      alpha: 0,
-      duration: 1200,     // 1.2 seconds — long enough to read, quick enough to feel snappy
-      ease: "Power1",
-      onComplete: function () {
-        popupText.destroy();
-      }
-    });
-  });
+      scene.tweens.add({
+        targets: popupText,
+        y: worldY - 80, // floats upward
+        alpha: 0,
+        duration: 1200, // 1.2 seconds — long enough to read, quick enough to feel snappy
+        ease: "Power1",
+        onComplete: function () {
+          popupText.destroy();
+        },
+      });
+    },
+  );
   // ─────────────────────────────────────────────
 
   // Camera follows the player and stays within the map
