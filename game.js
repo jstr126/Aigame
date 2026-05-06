@@ -25,12 +25,12 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var player;   // the player sprite (set in create)
-var cursors;  // arrow key input (set in create)
+var player; // the player sprite (set in create)
+var cursors; // arrow key input (set in create)
 
 function preload() {
   // Load the tilemap and its tileset image
-  this.load.tilemapTiledJSON("map", "maps/level2.tmj");
+  this.load.tilemapTiledJSON("map", "maps/level1.tmj");
   this.load.image("Terrain", "assets/2d/Terrain/Terrain (16x16).png");
 
   // Load the tiling background
@@ -57,7 +57,9 @@ function create() {
 
   // Find the spawn point defined in Tiled (object named "player" in layer "spawnpoints")
   var spawnpoints = map.getObjectLayer("spawnpoints").objects;
-  var spawn = spawnpoints.find(function (o) { return o.name === "player"; });
+  var spawn = spawnpoints.find(function (o) {
+    return o.name === "player";
+  });
 
   // Create the player at the spawn point (defined in player.js)
   player = playerCreate(this, spawn.x, spawn.y, groundLayer);
