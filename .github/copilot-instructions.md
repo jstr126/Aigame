@@ -69,7 +69,6 @@ When helping students modify the game, assume this foundation is already in plac
 ## Branches
 
 - `main` — clean student-facing base
-- `dev` — teacher working branch; source of truth for the current feature set
 - `MatterTest` — experimental Matter.js physics port; kept as a reference/advanced challenge, not for student distribution
 
 ## How to Help Students
@@ -78,3 +77,32 @@ When helping students modify the game, assume this foundation is already in plac
 - Suggest small, testable steps — one feature at a time
 - If something won't work in a browser without a server, say so clearly
 - Do not refactor working code unless the student asks
+
+## This Project's Current State (as of May 2026)
+
+This specific student project has diverged from the starter template. Key facts to remember:
+
+### Files in Use
+
+- `game.js` — scene setup, map loading, camera, input, calls player functions; also contains dark overlay / flashlight logic
+- `player.js` — all player logic, animations, movement, hitbox constants
+- `levels.js` — 5 advanced dungeon levels using DungeonAssetPack assets
+- `menu.js` — currently removed/unused
+- `index.html` — entry point; loads Phaser, then player.js, then game.js
+
+### Player Character
+
+- Stylized normal male character, 32×32px (replaced the default Pink Man)
+- Animations: walking, jumping
+- Controls: Arrow keys (left/right move, up jump, down crouch)
+
+### Extra Asset Packs Extracted into Project
+
+- **DungeonAssetPack** — used for all 5 levels (tiles, backgrounds, props)
+- **Lanterna** — flashlight/lighting sprites for the dark-environment feature
+
+### Features & Known Issues
+
+- **5 dungeon levels** — implemented in `levels.js`
+- **Dark environment + flashlight** — F key should toggle flashlight on/off; dark overlay currently broken (screen goes completely black). Fix needed: ensure flashlight starts ON (or overlay starts fully transparent), and verify the F key listener correctly toggles the overlay opacity/visibility.
+- **Game is unplayable** until the dark overlay bug is resolved — restore visibility before adding new features.

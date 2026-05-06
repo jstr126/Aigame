@@ -3,10 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <title>My Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background: #000;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
     <script src="node_modules/phaser/dist/phaser.min.js"></script>
-    <script src="menu.js"></script>
     <script src="player.js"></script>
     <script src="game.js"></script>
   </body>
